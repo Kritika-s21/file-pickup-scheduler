@@ -20,6 +20,8 @@ export const P = {
   trash: <><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" /></>,
   out: <><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" /></>,
   panel: <><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M9 4v16" /></>,
+  panelCollapse: <><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M9 4v16m9-11-3 3 3 3" /></>,
+  panelExpand: <><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M9 4v16m4-11 3 3-3 3" /></>,
   sdash: <path d="M3 3v18h18M7 15l4-4 3 3 5-6" />,
   snew: <><circle cx="12" cy="12" r="9" /><path d="M12 8v8M8 12h8" /></>,
   ssrc: <><path d="M9 2v6M15 2v6M7 8h10v4a5 5 0 0 1-10 0z" /><path d="M12 17v5" /></>,

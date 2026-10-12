@@ -4,7 +4,7 @@
   min-height: 100vh;
   transition: grid-template-columns .2s ease;
 }
-.shell-collapsed { grid-template-columns: 78px 1fr; }
+.shell.collapsed { grid-template-columns: 78px 1fr; }
 
 /* ── Sidebar ── */
 .sidebar {
@@ -18,14 +18,18 @@
   height: 100vh;
 }
 .brand { display: flex; align-items: center; gap: 12px; padding: 8px 8px 22px; }
+.brand-copy { min-width: 0; }
+.brand-title { font-family: var(--font-display); font-weight: 700; font-size: 15px; }
+.brand-sub { font-size: 11px; color: var(--text-low); margin-top: 1px; }
+.sidebar.collapsed .brand-title,
+.sidebar.collapsed .brand-sub,
+.sidebar.collapsed .brand-copy { display: none; }
 .brand-mark {
   width: 38px; height: 38px; border-radius: 10px;
   background: linear-gradient(135deg, var(--accent), var(--violet));
   display: flex; align-items: center; justify-content: center;
   font-family: var(--font-display); font-weight: 700; color: #0a1420; flex-shrink: 0;
 }
-.brand-title { font-family: var(--font-display); font-weight: 700; font-size: 15px; }
-.brand-sub { font-size: 11px; color: var(--text-low); margin-top: 1px; }
 
 .nav { display: flex; flex-direction: column; gap: 3px; flex: 1; overflow-y: auto; }
 .nav-item {
@@ -53,9 +57,23 @@
 .dot-bad { background: var(--bad); }
 .collapse-btn {
   background: transparent; border: 1px solid var(--border-soft); color: var(--text-low);
-  border-radius: 7px; padding: 7px; cursor: pointer; font-size: 12px;
+  border-radius: 7px; padding: 5px; cursor: pointer; font-size: 12px;
+  width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-left: auto;
 }
 .collapse-btn:hover { color: var(--text-hi); border-color: var(--border-strong); }
+
+.sidebar.collapsed .sidebar-stat,
+.sidebar.collapsed .sidebar-foot { display: none; }
+
+.sidebar.collapsed { padding-inline: 8px; }
+.sidebar.collapsed .brand { gap: 4px; padding: 8px 0 14px; }
+.sidebar.collapsed .collapse-btn { width: 26px; height: 26px; padding: 4px; }
+.sidebar.collapsed .nav-item { justify-content: center; padding-inline: 0; }
+.sidebar.collapsed .nav-item > span:last-child { display: none; }
+
+.sidebar.collapsed .brand-mark { width: 30px; height: 30px; }
+.sidebar.collapsed .brand-mark .cfo-ic { vertical-align: -1px; }
 
 /* ── Main content ── */
 .content { min-width: 0; }
@@ -101,6 +119,7 @@
 @media (max-width: 900px) {
   .sched-row { grid-template-columns: 1fr; align-items: flex-start; }
   .shell { grid-template-columns: 1fr; }
+  .shell.collapsed { grid-template-columns: 1fr; }
   .sidebar { position: fixed; z-index: 100; height: 100vh; width: 240px; transform: translateX(-100%); transition: transform .2s ease; }
   .content-inner { padding: 20px; }
   .topbar { padding: 16px 20px; }

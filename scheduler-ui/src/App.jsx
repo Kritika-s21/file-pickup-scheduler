@@ -36,6 +36,9 @@ export default function App() {
   const [theme, setTheme] = useState(() => {
     try { return localStorage.getItem("fps_theme") || "dark"; } catch { return "dark"; }
   });
+  const [collapsed, setCollapsed] = useState(() => {
+    try { return localStorage.getItem("fps_collapsed") === "1"; } catch { return false; }
+  });
 
   const toggleTheme = () => setTheme((prev) => {
     const next = prev === "dark" ? "light" : "dark";
@@ -46,6 +49,10 @@ export default function App() {
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    try { localStorage.setItem("fps_collapsed", collapsed ? "1" : "0"); } catch { /* storage unavailable */ }
+  }, [collapsed]);
 
   const goTo = (key, opts = {}) => {
     setActive(key);
@@ -90,22 +97,33 @@ export default function App() {
 
   return (
     <ToastProvider>
-      <div className="shell">
-        <aside className="sidebar">
+      <div className={`shell${collapsed ? " collapsed" : ""}`}>
+        <aside className={`sidebar${collapsed ? " collapsed" : ""}`}>
           <div className="brand">
             <div className="brand-mark"><Ic n="logo" size={20} /></div>
-            <div>
+            <div className="brand-copy">
               <div className="brand-title">File Pickup</div>
               <div className="brand-sub">Scheduler Console</div>
             </div>
+            <button
+              className="collapse-btn"
+              aria-label={collapsed ? "Expand File Pickup panel" : "Collapse File Pickup panel"}
+              aria-expanded={!collapsed}
+              aria-controls="primary-navigation"
+              title={collapsed ? "Expand panel" : "Collapse panel"}
+              onClick={() => setCollapsed((c) => !c)}
+            >
+              <Ic n={collapsed ? "panelExpand" : "panelCollapse"} size={16} />
+            </button>
           </div>
 
-          <nav className="nav">
+          <nav className="nav" id="primary-navigation">
             {NAV.map((n) => (
               <button
                 key={n.key}
                 className={`nav-item ${active === n.key ? "nav-item-active" : ""}`}
                 onClick={() => goTo(n.key)}
+                aria-label={n.label}
                 title={n.label}
               >
                 <span className="nav-icon"><Ic n={n.icon} size={17} /></span>
