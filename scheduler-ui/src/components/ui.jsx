@@ -169,18 +169,18 @@ export function Field({ label, hint, required, children }) {
   );
 }
 
-export function Input(props) {
-  return <input className="input" {...props} />;
+export function Input({ className = "", ...props }) {
+  return <input className={`input ${className}`.trim()} {...props} />;
 }
-export function Select({ children, ...props }) {
+export function Select({ children, className = "", ...props }) {
   return (
-    <select className="input" {...props}>
+    <select className={`input ${className}`.trim()} {...props}>
       {children}
     </select>
   );
 }
-export function TextArea(props) {
-  return <textarea className="input textarea" {...props} />;
+export function TextArea({ className = "", ...props }) {
+  return <textarea className={`input textarea ${className}`.trim()} {...props} />;
 }
 export function Toggle({ checked, onChange, label }) {
   return (

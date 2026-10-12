@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Panel, Card, Tabs, Button, Input, Field, Empty, Badge, useToast } from "../components/ui.jsx";
+import { Panel, Card, Tabs, Button, Input, Select, TextArea, Field, Empty, Badge, useToast } from "../components/ui.jsx";
 import { ConnectionsAPI } from "../api.js";
 import Ic from "../components/icons.jsx";
 
@@ -149,12 +149,12 @@ function SqlProfiles() {
             <Input placeholder="e.g. Marketing Analytics DB" value={name} onChange={(e) => setName(e.target.value)} className="w-full" />
           </Field>
           <Field label="Database type">
-            <select value={dbType} onChange={(e) => onDbTypeChange(e.target.value)} className="select w-full">
+            <Select value={dbType} onChange={(e) => onDbTypeChange(e.target.value)} className="w-full">
               <option value="mssql">SQL Server (mssql)</option>
               <option value="postgresql">PostgreSQL</option>
               <option value="mysql">MySQL</option>
               <option value="other">Other</option>
-            </select>
+            </Select>
           </Field>
 
           {!advanced && dbType !== "other" ? (
@@ -186,8 +186,8 @@ function SqlProfiles() {
           ) : (
             <>
               <Field label="Connection string">
-                <textarea
-                  className="textarea w-full mono"
+                <TextArea
+                  className="w-full"
                   rows={3}
                   placeholder={"mssql+pyodbc://user:password@myserver.database.windows.net/mydb?driver=ODBC+Driver+17+for+SQL+Server\n\nor the semicolon form: Server=...;Database=...;UID=...;PWD=..."}
                   value={rawConnStr}
@@ -230,8 +230,6 @@ function SqlProfiles() {
       )}
       <style>{`.section-label{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-mid)}
         .flex-col{display:flex;flex-direction:column}
-        .textarea{background:var(--bg-3);border:1px solid var(--border-soft);border-radius:8px;padding:10px 12px;font-size:13px;resize:vertical}
-        .select{background:var(--bg-3);border:1px solid var(--border-soft);border-radius:8px;padding:8px 12px;font-size:13px}
         .link-btn{background:none;border:none;color:var(--accent-hi);font-size:12.5px;cursor:pointer;padding:2px 0;text-align:left;text-decoration:underline;width:fit-content}`}</style>
     </>
   );
