@@ -1,0 +1,107 @@
+.shell {
+  display: grid;
+  grid-template-columns: 264px 1fr;
+  min-height: 100vh;
+  transition: grid-template-columns .2s ease;
+}
+.shell-collapsed { grid-template-columns: 78px 1fr; }
+
+/* ── Sidebar ── */
+.sidebar {
+  background: var(--bg-1);
+  border-right: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  padding: 18px 14px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.brand { display: flex; align-items: center; gap: 12px; padding: 8px 8px 22px; }
+.brand-mark {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--violet));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 700; color: #0a1420; flex-shrink: 0;
+}
+.brand-title { font-family: var(--font-display); font-weight: 700; font-size: 15px; }
+.brand-sub { font-size: 11px; color: var(--text-low); margin-top: 1px; }
+
+.nav { display: flex; flex-direction: column; gap: 3px; flex: 1; overflow-y: auto; }
+.nav-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border-radius: 9px;
+  background: transparent; border: none; color: var(--text-mid);
+  font-size: 13.5px; font-weight: 500; cursor: pointer; text-align: left;
+  transition: all .15s ease;
+}
+.nav-item:hover { background: var(--bg-2); color: var(--text-hi); }
+.nav-item-active {
+  background: var(--accent-dim); color: var(--accent-hi); font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.nav-icon { font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; }
+
+.sidebar-foot { display: flex; flex-direction: column; gap: 10px; padding-top: 14px; border-top: 1px solid var(--border-soft); }
+.engine-pill {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border-radius: 8px; background: var(--bg-2);
+  font-size: 12px; color: var(--text-mid); text-transform: capitalize;
+}
+.dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.dot-good { background: var(--good); }
+.dot-bad { background: var(--bad); }
+.collapse-btn {
+  background: transparent; border: 1px solid var(--border-soft); color: var(--text-low);
+  border-radius: 7px; padding: 7px; cursor: pointer; font-size: 12px;
+}
+.collapse-btn:hover { color: var(--text-hi); border-color: var(--border-strong); }
+
+/* ── Main content ── */
+.content { min-width: 0; }
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 32px; background: rgba(16, 22, 31, 0.85); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-soft);
+}
+.page-title { font-size: 21px; }
+.page-crumb { font-size: 12px; color: var(--text-low); margin-top: 3px; text-transform: capitalize; }
+.conn-badge { font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 20px; }
+.conn-good { color: var(--good); background: var(--good-dim); }
+.conn-bad { color: var(--bad); background: var(--bad-dim); }
+
+.content-inner { padding: 28px 32px 60px; max-width: 1400px; }
+
+/* ── Scheduler rows ── */
+.sched-table { display: flex; flex-direction: column; gap: 2px; }
+.sched-row {
+  display: grid;
+  grid-template-columns: 1.6fr 0.9fr 1.1fr 1.6fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 6px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.sched-row:last-child { border-bottom: none; }
+.sched-row-main .sched-name { font-weight: 600; font-size: 14px; }
+.sched-row-main .sched-id { font-size: 11.5px; color: var(--text-low); }
+.sched-freq, .sched-scan { font-size: 12.5px; }
+
+/* ── Data table ── */
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th {
+  text-align: left; padding: 10px 12px; color: var(--text-low);
+  font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--border-soft);
+}
+.data-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-soft); color: var(--text-hi); }
+.data-table tr:hover td { background: var(--bg-3); }
+
+@media (max-width: 900px) {
+  .sched-row { grid-template-columns: 1fr; align-items: flex-start; }
+  .shell { grid-template-columns: 1fr; }
+  .sidebar { position: fixed; z-index: 100; height: 100vh; width: 240px; transform: translateX(-100%); transition: transform .2s ease; }
+  .content-inner { padding: 20px; }
+  .topbar { padding: 16px 20px; }
+}
