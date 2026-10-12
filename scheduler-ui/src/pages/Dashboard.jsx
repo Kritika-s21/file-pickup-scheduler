@@ -179,7 +179,7 @@ export default function Dashboard({ goTo, status }) {
   return (
     <>
       {confirmNode}
-      <div className="grid grid-4 mb-md" style={{ gridTemplateColumns: "repeat(5, 1fr)" }}>
+      <div className="dashboard-stats mb-md">
         <Card><Stat icon="archive" tone="accent" label="Schedulers" value={list.length} /></Card>
         <Card><Stat icon="trend" tone="good" label="Total scans" value={history.length} /></Card>
         <Card><Stat icon="file" tone="violet" label="Total files" value={totalUniqueFiles} /></Card>
