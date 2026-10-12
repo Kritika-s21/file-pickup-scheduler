@@ -1,20 +1,21 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Panel, Card, Tabs, Button, Input, Field, Empty, Badge, useToast } from "../components/ui.jsx";
 import { ConnectionsAPI } from "../api.js";
+import Ic from "../components/icons.jsx";
 
 export default function DataConnections() {
   const [tab, setTab] = useState("sql");
 
   return (
     <>
-      <Panel title="🔌 Data Connections" icon="🔌"
+      <Panel title="Data Connections" icon="sconn"
         subtitle="Connect your own SQL databases and choose where vector data is stored, instead of the single database/folder baked into the environment. Pick a connection per-scheduler (Sources page) and per-presentation (Presentation Generator page).">
         <Tabs
           active={tab}
           onChange={setTab}
           tabs={[
-            { key: "sql", label: "SQL Databases", icon: "🗄" },
-            { key: "vector", label: "Vector Stores", icon: "🧠" },
+            { key: "sql", label: "SQL Databases", icon: "archive" },
+            { key: "vector", label: "Vector Stores", icon: "sagent" },
           ]}
         />
         <div className="mt-md">
@@ -176,7 +177,7 @@ function SqlProfiles() {
                 <Field label="Password">
                   <div className="row gap-sm">
                     <Input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} className="w-full" autoComplete="new-password" />
-                    <Button size="sm" variant="ghost" onClick={() => setShowPassword((s) => !s)}>{showPassword ? "🙈" : "👁"}</Button>
+                    <Button size="sm" variant="ghost" onClick={() => setShowPassword((s) => !s)}><Ic n={showPassword ? "eyeOff" : "eye"} size={14} /></Button>
                   </div>
                 </Field>
               </div>
@@ -199,16 +200,16 @@ function SqlProfiles() {
             </>
           )}
 
-          <div className="text-mid" style={{ fontSize: 12 }}>🔒 Your password is combined into a connection string and stored encrypted at rest using the same master key as your source credentials (see Settings). It is never shown again after saving.</div>
+          <div className="text-mid" style={{ fontSize: 12 }}><Ic n="lock" size={12} /> Your password is combined into a connection string and stored encrypted at rest using the same master key as your source credentials (see Settings). It is never shown again after saving.</div>
           <div>
-            <Button variant="primary" loading={saving} onClick={submit}>➕ Add connection</Button>
+            <Button variant="primary" loading={saving} onClick={submit}><Ic n="plus" size={13} /> Add connection</Button>
           </div>
         </div>
       </Card>
 
       <div className="section-label mb-sm">Your SQL databases</div>
-      {!profiles ? <Empty icon="⏳" title="Loading…" /> : profiles.length === 0 ? (
-        <Empty icon="🗄" title="No SQL databases added yet" hint="The app will fall back to the SQL_CONNECTION_STRING environment variable." />
+      {!profiles ? <Empty icon="hourglass" title="Loading…" /> : profiles.length === 0 ? (
+        <Empty icon="archive" title="No SQL databases added yet" hint="The app will fall back to the SQL_CONNECTION_STRING environment variable." />
       ) : (
         <div className="flex-col gap-sm">
           {profiles.map((p) => (
@@ -219,8 +220,8 @@ function SqlProfiles() {
                   <div className="mono text-mid mt-sm" style={{ fontSize: 12 }}>{p.masked || "(unreadable — check SCHED_MASTER_KEY)"}</div>
                 </div>
                 <div className="row gap-sm">
-                  <Button size="sm" loading={testingId === p.id} onClick={() => test(p.id)}>🧪 Test</Button>
-                  <Button size="sm" variant="danger" loading={deletingId === p.id} onClick={() => del(p.id)}>🗑 Delete</Button>
+                  <Button size="sm" loading={testingId === p.id} onClick={() => test(p.id)}><Ic n="flask" size={13} /> Test</Button>
+                  <Button size="sm" variant="danger" loading={deletingId === p.id} onClick={() => del(p.id)}><Ic n="trash" size={13} /> Delete</Button>
                 </div>
               </div>
             </Card>
@@ -310,14 +311,14 @@ function VectorProfiles() {
             <Input value={collection} onChange={(e) => setCollection(e.target.value)} className="w-full" />
           </Field>
           <div>
-            <Button variant="primary" loading={saving} onClick={submit}>➕ Add vector store</Button>
+            <Button variant="primary" loading={saving} onClick={submit}><Ic n="plus" size={13} /> Add vector store</Button>
           </div>
         </div>
       </Card>
 
       <div className="section-label mb-sm">Your vector stores</div>
-      {!profiles ? <Empty icon="⏳" title="Loading…" /> : profiles.length === 0 ? (
-        <Empty icon="🧠" title="No vector stores added yet" hint="The app will fall back to VECTOR_DB_PATH (default ./lance_db)." />
+      {!profiles ? <Empty icon="hourglass" title="Loading…" /> : profiles.length === 0 ? (
+        <Empty icon="sagent" title="No vector stores added yet" hint="The app will fall back to VECTOR_DB_PATH (default ./lance_db)." />
       ) : (
         <div className="flex-col gap-sm">
           {profiles.map((p) => (
@@ -328,8 +329,8 @@ function VectorProfiles() {
                   <div className="mono text-mid mt-sm" style={{ fontSize: 12 }}>{p.db_path}</div>
                 </div>
                 <div className="row gap-sm">
-                  <Button size="sm" loading={testingId === p.id} onClick={() => test(p.id)}>🧪 Test</Button>
-                  <Button size="sm" variant="danger" loading={deletingId === p.id} onClick={() => del(p.id)}>🗑 Delete</Button>
+                  <Button size="sm" loading={testingId === p.id} onClick={() => test(p.id)}><Ic n="flask" size={13} /> Test</Button>
+                  <Button size="sm" variant="danger" loading={deletingId === p.id} onClick={() => del(p.id)}><Ic n="trash" size={13} /> Delete</Button>
                 </div>
               </div>
             </Card>

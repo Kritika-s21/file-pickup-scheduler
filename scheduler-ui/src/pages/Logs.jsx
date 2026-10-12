@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Panel, Select, Button, Badge, Empty, useToast, useConfirm } from "../components/ui.jsx";
 import { SchedulerAPI, ProfileStore } from "../api.js";
 import { fmtDateTime } from "../lib/format.js";
+import Ic from "../components/icons.jsx";
 
 export default function Logs() {
   const [history, setHistory] = useState([]);
@@ -67,7 +68,7 @@ export default function Logs() {
   return (
     <>
       {confirmNode}
-      <Panel title="Scan history" icon="📜" subtitle="Recent scans reported by /api/history">
+      <Panel title="Scan history" icon="slogs" subtitle="Recent scans reported by /api/history">
         <div className="row-between mb-md">
           <Select value={filter} onChange={(e) => setFilter(e.target.value)} style={{ maxWidth: 260 }}>
             <option value="All">All schedulers</option>
@@ -75,12 +76,12 @@ export default function Logs() {
           </Select>
           <div className="row gap-sm">
             <span className="text-mid" style={{ fontSize: 12.5 }}>Showing {visible.length} scan runs</span>
-            {visible.length > 0 && <Button size="sm" variant="danger" onClick={deleteAll}>🗑 Delete all</Button>}
+            {visible.length > 0 && <Button size="sm" variant="danger" onClick={deleteAll}><Ic n="trash" size={13} /> Delete all</Button>}
           </div>
         </div>
 
         {visible.length === 0 ? (
-          <Empty icon="📉" title="No scan logs yet" hint="Trigger a scan from Dashboard or Schedulers list." />
+          <Empty icon="trendDown" title="No scan logs yet" hint="Trigger a scan from Dashboard or Schedulers list." />
         ) : (
           <div className="log-list">
             {visible.map((r) => {
@@ -88,7 +89,7 @@ export default function Logs() {
               return (
                 <div key={r.scan_id} className="log-entry">
                   <button className="log-entry-head" onClick={() => setOpenIds((o) => ({ ...o, [r.scan_id]: !open }))}>
-                    <span>{open ? "▾" : "▸"}</span>
+                    <span style={{ display: "inline-flex", transform: open ? "none" : "rotate(-90deg)" }}><Ic n="chev" size={13} /></span>
                     <span className="mono">{r.scan_id}</span>
                     <span className="text-mid">· {r.scheduler_name || r.scheduler_id}</span>
                     <span className="text-mid">· {fmtDateTime(r.started_at)}</span>
@@ -114,7 +115,7 @@ export default function Logs() {
                         <MiniStat label="Timezone" value={r.metadata?.timezone || "—"} />
                       </div>
                       {Array.isArray(r.errors) && r.errors.length > 0 && (
-                        <div className="err-box">⚠️ {r.errors.join(", ")}</div>
+                        <div className="err-box"><Ic n="warn" size={13} /> {r.errors.join(", ")}</div>
                       )}
 
                       {(r.new_files?.length > 0 || r.modified_files?.length > 0) && (
@@ -155,8 +156,8 @@ export default function Logs() {
 
                       <pre className="json-block mono">{JSON.stringify(r, null, 2)}</pre>
                       <div className="row-end gap-sm mt-md">
-                        <Button size="sm" onClick={() => download(r)}>⬇️ Download JSON</Button>
-                        <Button size="sm" variant="danger" loading={busyId === r.scan_id} onClick={() => deleteOne(r.scan_id)}>🗑 Delete this log</Button>
+                        <Button size="sm" onClick={() => download(r)}><Ic n="download" size={13} /> Download JSON</Button>
+                        <Button size="sm" variant="danger" loading={busyId === r.scan_id} onClick={() => deleteOne(r.scan_id)}><Ic n="trash" size={13} /> Delete this log</Button>
                       </div>
                     </div>
                   )}
@@ -175,7 +176,7 @@ export default function Logs() {
           background: var(--bg-3); border: none; color: var(--text-hi); cursor: pointer; font-size: 13px; text-align: left;
         }
         .log-entry-body { padding: 16px; background: var(--bg-2); }
-        .json-block { background: #0c1119; border: 1px solid var(--border-soft); border-radius: 8px; padding: 14px;
+        .json-block { background: var(--code-bg, #0c1119); border: 1px solid var(--border-soft); border-radius: 8px; padding: 14px;
           font-size: 12px; max-height: 320px; overflow: auto; white-space: pre-wrap; }
         .err-box { background: var(--bad-dim); color: var(--bad); padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; font-size: 13px; }
         .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-mid); margin-bottom: 8px; }

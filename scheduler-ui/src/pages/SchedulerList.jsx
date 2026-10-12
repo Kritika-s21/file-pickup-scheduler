@@ -3,6 +3,7 @@ import { Panel, Badge, Button, Empty, useToast, useConfirm } from "../components
 import { SchedulerAPI, ProfileStore } from "../api.js";
 import { freqLabel, fmtDateTime } from "../lib/format.js";
 import { fmtNextRun } from "../lib/nextRun.js";
+import Ic from "../components/icons.jsx";
 
 export default function SchedulerList({ goTo }) {
   const [profiles, setProfiles] = useState({});
@@ -66,9 +67,9 @@ export default function SchedulerList({ goTo }) {
   return (
     <>
       {confirmNode}
-      <Panel title="My schedulers" icon="🗂️" subtitle={`${list.length} configured`}>
+      <Panel title="My schedulers" icon="archive" subtitle={`${list.length} configured`}>
         {list.length === 0 ? (
-          <Empty icon="📭" title="No schedulers yet" hint='Create one from "New Scheduler".' />
+          <Empty icon="inbox" title="No schedulers yet" hint='Create one from "New Scheduler".' />
         ) : (
           <div className="sched-table">
             {list.map((s) => (
@@ -78,20 +79,20 @@ export default function SchedulerList({ goTo }) {
                   <div className="sched-id mono">{s.id}</div>
                 </div>
                 <Badge status={s.status || "idle"} />
-                <div className="text-mid" style={{ fontSize: 12.5 }}>📆 {freqLabel(s)}</div>
+                <div className="text-mid" style={{ fontSize: 12.5 }}><Ic n="cal" size={13} /> {freqLabel(s)}</div>
                 <div className="text-mid" style={{ fontSize: 12.5 }}>
                   {s.status === "running"
-                    ? `⏰ next: ${fmtNextRun(s) || "—"}`
-                    : s.lastRun ? `⏰ last ${fmtDateTime(s.lastRun)}` : "⏰ —"}
+                    ? <><Ic n="clock" size={12} /> next: {fmtNextRun(s) || "—"}</>
+                    : s.lastRun ? <><Ic n="clock" size={12} /> last {fmtDateTime(s.lastRun)}</> : <><Ic n="clock" size={12} /> —</>}
                 </div>
                 <div className="row gap-sm">
-                  <Button size="sm" loading={busyId === s.id} onClick={() => runNow(s.id)}>⚡</Button>
-                  <Button size="sm" variant="ghost" onClick={() => goTo && goTo("new", { editingId: s.id })}>✏️</Button>
+                  <Button size="sm" loading={busyId === s.id} onClick={() => runNow(s.id)}><Ic n="run" size={13} /></Button>
+                  <Button size="sm" variant="ghost" onClick={() => goTo && goTo("new", { editingId: s.id })}><Ic n="edit" size={13} /></Button>
                   <Button size="sm" variant={s.status === "running" ? "warn" : "success"}
                     loading={busyId === s.id} onClick={() => toggle(s.id, s)}>
-                    {s.status === "running" ? "⏸" : "▶"}
+                    <Ic n={s.status === "running" ? "pause" : "play"} size={13} />
                   </Button>
-                  <Button size="sm" variant="danger" onClick={() => remove(s.id, s)}>🗑</Button>
+                  <Button size="sm" variant="danger" onClick={() => remove(s.id, s)}><Ic n="trash" size={13} /></Button>
                 </div>
               </div>
             ))}

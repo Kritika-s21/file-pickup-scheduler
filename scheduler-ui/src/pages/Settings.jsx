@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Panel, Card, Field, Input, Button, useToast, useConfirm } from "../components/ui.jsx";
 import { SchedulerAPI, ProfileStore } from "../api.js";
+import Ic from "../components/icons.jsx";
 
 const PROVIDERS = [
   { key: "env", label: "env — SCHED_MASTER_KEY (dev only)" },
@@ -47,7 +48,7 @@ export default function Settings() {
     <>
       {confirmNode}
 
-      <Panel title="Credential encryption" icon="🔒" subtitle="Master-key provider status">
+      <Panel title="Credential encryption" icon="lock" subtitle="Master-key provider status">
         <div className="info-inline mb-md">
           Each source's credentials are encrypted individually and stored with that source — sources never share a
           single set of secrets. Configure the provider via <code className="mono">SCHED_KEY_PROVIDER</code> on
@@ -66,23 +67,23 @@ export default function Settings() {
         </details>
       </Panel>
 
-      <Panel title="Log storage" icon="🗂️">
+      <Panel title="Log storage" icon="archive">
         <Field label="Log directory">
           <Input value={logDir} onChange={(e) => setLogDir(e.target.value)} />
         </Field>
       </Panel>
 
-      <Panel title="Export" icon="⬇️" subtitle="Exported configs are safe to share — secret fields stay encrypted (enc:v1:...)">
+      <Panel title="Export" icon="download" subtitle="Exported configs are safe to share — secret fields stay encrypted (enc:v1:...)">
         <div className="row gap-sm">
-          <Button onClick={exportLogs}>⬇️ All scan logs (JSON)</Button>
-          <Button onClick={exportConfigs}>⬇️ Scheduler configs (JSON)</Button>
+          <Button onClick={exportLogs}><Ic n="download" size={13} /> All scan logs (JSON)</Button>
+          <Button onClick={exportConfigs}><Ic n="download" size={13} /> Scheduler configs (JSON)</Button>
         </div>
       </Panel>
 
-      <Panel title="Danger zone" icon="⚠️">
+      <Panel title="Danger zone" icon="warn">
         <div className="row gap-sm">
-          <Button variant="danger" onClick={clearLogs}>🗑 Clear scan log filters</Button>
-          <Button variant="danger" onClick={deleteAllSchedulers}>💣 Delete all schedulers</Button>
+          <Button variant="danger" onClick={clearLogs}><Ic n="trash" size={13} /> Clear scan log filters</Button>
+          <Button variant="danger" onClick={deleteAllSchedulers}><Ic n="bomb" size={13} /> Delete all schedulers</Button>
         </div>
       </Panel>
 

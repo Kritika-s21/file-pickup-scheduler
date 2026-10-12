@@ -1,5 +1,7 @@
 :root {
-  /* ---- Palette: "signal room" — slate base, cyan operate / amber attention ---- */
+  color-scheme: dark;
+
+  /* ---- Palette: "signal room" — dark (default): slate base, cyan operate / amber attention ---- */
   --bg-0: #10161f;         /* app backdrop */
   --bg-1: #161d29;         /* sidebar / panel base */
   --bg-2: #1c2432;         /* card surface */
@@ -39,6 +41,60 @@
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.25);
   --shadow-md: 0 8px 24px rgba(0,0,0,0.35);
   --shadow-lg: 0 16px 48px rgba(0,0,0,0.45);
+
+  --topbar-bg: rgba(16, 22, 31, 0.85);   /* translucent top bar over the backdrop */
+  --on-accent: #0a1620;                  /* text on accent-filled buttons / brand mark */
+  --on-good: #0a1a12;
+  --on-warn: #241703;
+
+  --code-bg: #0c1119;                    /* code / log console surfaces */
+  --code-fg: #9fb3c8;
+}
+
+/* ---- Light theme: same token names, accents darkened for contrast on white.
+       Applied by [data-theme="light"] on <html> (see App.jsx / index.html). ---- */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --bg-0: #eef2f7;         /* app backdrop */
+  --bg-1: #f7f9fc;         /* sidebar / panel base */
+  --bg-2: #ffffff;         /* card surface */
+  --bg-3: #e9eef5;         /* raised / hover surface */
+  --bg-4: #f2f5fa;         /* input surface */
+  --border-soft: #e0e6ef;
+  --border-strong: #c6cfdd;
+
+  --text-hi: #101a2b;
+  --text-mid: #46566d;
+  --text-low: #6e7d95;
+
+  --accent: #0e7490;        /* cyan, darkened — still readable as text on white */
+  --accent-hi: #0a5f75;
+  --accent-dim: rgba(14, 116, 144, 0.12);
+
+  --warn: #b45309;
+  --warn-dim: rgba(180, 83, 9, 0.13);
+
+  --good: #047857;
+  --good-dim: rgba(4, 120, 87, 0.13);
+
+  --bad: #dc2626;
+  --bad-dim: rgba(220, 38, 38, 0.12);
+
+  --violet: #6d28d9;
+  --violet-dim: rgba(109, 40, 217, 0.13);
+
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 16px 48px rgba(15, 23, 42, 0.12);
+
+  --topbar-bg: rgba(255, 255, 255, 0.85);
+  --on-accent: #ffffff;
+  --on-good: #ffffff;
+  --on-warn: #ffffff;
+
+  --code-bg: #f6f8fa;
+  --code-fg: #475569;
 }
 
 * { box-sizing: border-box; }

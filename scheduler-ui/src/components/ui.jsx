@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, createContext, useContext } from "react";
 import "./ui.css";
+import Ic from "./icons.jsx";
 
 /* ───────────────────────── Toasts ───────────────────────── */
 
@@ -35,6 +36,12 @@ export function ToastProvider({ children }) {
 
 /* ───────────────────────── Panel (minimize / maximize) ───────────────────────── */
 
+function iconNode(icon, size = 16) {
+  if (!icon) return null;
+  if (typeof icon !== "string") return icon;
+  return <Ic n={icon} size={size} />;
+}
+
 export function Panel({ title, icon, subtitle, children, actions, defaultOpen = true, badge }) {
   const [open, setOpen] = useState(defaultOpen);
   const [maximized, setMaximized] = useState(false);
@@ -44,7 +51,7 @@ export function Panel({ title, icon, subtitle, children, actions, defaultOpen = 
       <section className={`panel ${maximized ? "panel-hidden-placeholder" : ""}`}>
         <header className="panel-head">
           <div className="panel-head-left">
-            {icon && <span className="panel-icon">{icon}</span>}
+            {icon && <span className="panel-icon">{iconNode(icon, 17)}</span>}
             <div>
               <h3 className="panel-title">{title}</h3>
               {subtitle && <div className="panel-subtitle">{subtitle}</div>}
@@ -58,10 +65,10 @@ export function Panel({ title, icon, subtitle, children, actions, defaultOpen = 
               title={open ? "Minimize" : "Expand"}
               onClick={() => setOpen((o) => !o)}
             >
-              {open ? "–" : "+"}
+              <Ic n={open ? "minus" : "plus"} size={14} />
             </button>
             <button className="icon-btn" title="Maximize" onClick={() => setMaximized(true)}>
-              ⤢
+              <Ic n="max" size={14} />
             </button>
           </div>
         </header>
@@ -73,7 +80,7 @@ export function Panel({ title, icon, subtitle, children, actions, defaultOpen = 
           <div className="panel panel-maximized">
             <header className="panel-head">
               <div className="panel-head-left">
-                {icon && <span className="panel-icon">{icon}</span>}
+                {icon && <span className="panel-icon">{iconNode(icon, 17)}</span>}
                 <div>
                   <h3 className="panel-title">{title}</h3>
                   {subtitle && <div className="panel-subtitle">{subtitle}</div>}
@@ -83,7 +90,7 @@ export function Panel({ title, icon, subtitle, children, actions, defaultOpen = 
               <div className="panel-head-right">
                 {actions}
                 <button className="icon-btn" title="Restore" onClick={() => setMaximized(false)}>
-                  ⤡
+                  <Ic n="shrink" size={14} />
                 </button>
               </div>
             </header>
@@ -141,7 +148,7 @@ export function Tabs({ tabs, active, onChange }) {
           className={`tab ${active === t.key ? "tab-active" : ""}`}
           onClick={() => onChange(t.key)}
         >
-          {t.icon} {t.label}
+          {iconNode(t.icon, 15)} {t.label}
         </button>
       ))}
     </div>
@@ -195,7 +202,7 @@ export function Modal({ open, onClose, title, children, width = 460 }) {
       <div className="modal" style={{ width }} onMouseDown={(e) => e.stopPropagation()}>
         <div className="modal-head">
           <h3>{title}</h3>
-          <button className="icon-btn" onClick={onClose}>✕</button>
+          <button className="icon-btn" onClick={onClose}><Ic n="x" size={14} /></button>
         </div>
         <div className="modal-body">{children}</div>
       </div>
@@ -223,10 +230,10 @@ export function useConfirm() {
 
 /* ───────────────────────── Empty state ───────────────────────── */
 
-export function Empty({ icon = "📭", title, hint }) {
+export function Empty({ icon = "inbox", title, hint }) {
   return (
     <div className="empty">
-      <div className="empty-icon">{icon}</div>
+      <div className="empty-icon">{iconNode(icon, 30)}</div>
       <div className="empty-title">{title}</div>
       {hint && <div className="empty-hint">{hint}</div>}
     </div>
@@ -238,7 +245,7 @@ export function Empty({ icon = "📭", title, hint }) {
 export function Stat({ label, value, tone = "accent", icon }) {
   return (
     <div className="stat">
-      <div className={`stat-icon stat-${tone}`}>{icon}</div>
+      <div className={`stat-icon stat-${tone}`}>{iconNode(icon, 20)}</div>
       <div>
         <div className="stat-value">{value}</div>
         <div className="stat-label">{label}</div>

@@ -75,7 +75,11 @@ src/
 
 ## Theme
 
-"Signal room" palette — deep slate-blue background (`#10161f`), cyan accent
-for running/active states, amber for attention, coral for destructive
-actions, violet for structured/vector data. Space Grotesk for headings,
+Dark & light themes, applied via `data-theme` on `<html>` and persisted in
+`localStorage` (`fps_theme`) — same mechanism as the CFO codebase. Dark is the
+default: "Signal room" palette — deep slate-blue background (`#10161f`), cyan
+accent for running/active states, amber for attention, coral for destructive
+actions, violet for structured/vector data. The light theme overrides the same
+tokens under `[data-theme="light"]` in `theme.css` (accents darkened for
+contrast on white). Toggle lives in the top bar. Space Grotesk for headings,
 Inter for body text, JetBrains Mono for IDs/JSON/logs.

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Panel, Card, Field, Input, Select, TextArea, Button, Badge, useToast } from "../components/ui.jsx";
 import { SchedulerAPI, ProfileStore, ConnectionsAPI } from "../api.js";
 import { uid } from "../lib/format.js";
+import Ic from "../components/icons.jsx";
 
 const FREQS = [
   { key: "minutely", label: "Every N min" },
@@ -206,7 +207,7 @@ export default function NewScheduler({ editingId, onSaved }) {
 
   return (
     <>
-      <Panel title={isEdit ? "Edit scheduler" : "New scheduler"} icon={isEdit ? "✏️" : "➕"}
+      <Panel title={isEdit ? "Edit scheduler" : "New scheduler"} icon={isEdit ? "edit" : "snew"}
         subtitle={isEdit ? `Editing ${existing.name || eid} · ${eid}` : "Configure a new pickup schedule"}>
         <div className="section-label">1 · Identity</div>
         <div className="grid grid-2">
@@ -295,7 +296,7 @@ export default function NewScheduler({ editingId, onSaved }) {
 
         {nextRun && (
           <div className="next-run-banner">
-            ⏰ Next scan (preview): <b>{nextRun.toLocaleString(undefined, { weekday: "long", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</b> ({tz})
+            <Ic n="clock" size={13} /> Next scan (preview): <b>{nextRun.toLocaleString(undefined, { weekday: "long", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</b> ({tz})
           </div>
         )}
 
@@ -319,7 +320,7 @@ export default function NewScheduler({ editingId, onSaved }) {
         <div className="section-label">5 · Data destination</div>
         <p className="text-mid" style={{ fontSize: 12.5, marginTop: -6, marginBottom: 12 }}>
           Choose which database structured data is ingested into, and where vector embeddings for unstructured
-          content are stored. Manage these under 🔌 Data Connections.
+          content are stored. Manage these under <Ic n="sconn" size={13} /> Data Connections.
         </p>
         <div className="grid grid-2">
           <Field label="SQL database">
@@ -336,7 +337,7 @@ export default function NewScheduler({ editingId, onSaved }) {
 
         <div className="row-end gap-sm mt-md">
           <Button variant="ghost" onClick={() => onSaved && onSaved(null)}>Cancel</Button>
-          <Button variant="primary" size="lg" loading={saving} onClick={save}>💾 Save scheduler</Button>
+          <Button variant="primary" size="lg" loading={saving} onClick={save}><Ic n="save" size={15} /> Save scheduler</Button>
         </div>
       </Panel>
 

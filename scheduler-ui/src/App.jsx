@@ -13,26 +13,39 @@ import IngestionAgent from "./pages/IngestionAgent.jsx";
 import Presentation from "./pages/Presentation.jsx";
 import DataConnections from "./pages/DataConnections.jsx";
 import Settings from "./pages/Settings.jsx";
+import Ic from "./components/icons.jsx";
 
 const NAV = [
-  { key: "dashboard", label: "Dashboard", icon: "📊", Comp: Dashboard },
-  { key: "new", label: "New Scheduler", icon: "➕", Comp: NewScheduler },
-  { key: "list", label: "Schedulers", icon: "🗂️", Comp: SchedulerList },
-  { key: "sources", label: "Sources", icon: "🔌", Comp: Sources },
-  { key: "logs", label: "History & Logs", icon: "📜", Comp: Logs },
-  { key: "agent", label: "Ingestion Agent", icon: "🧠", Comp: IngestionAgent },
-  { key: "presentation", label: "Presentation Agent", icon: "🎞️", Comp: Presentation },
-  { key: "connections", label: "Data Connections", icon: "🔌", Comp: DataConnections },
-  { key: "settings", label: "Settings", icon: "⚙️", Comp: Settings },
+  { key: "dashboard", label: "Dashboard", icon: "sdash", Comp: Dashboard },
+  { key: "new", label: "New Scheduler", icon: "snew", Comp: NewScheduler },
+  { key: "list", label: "Schedulers", icon: "archive", Comp: SchedulerList },
+  { key: "sources", label: "Sources", icon: "ssrc", Comp: Sources },
+  { key: "logs", label: "History & Logs", icon: "slogs", Comp: Logs },
+  { key: "agent", label: "Ingestion Agent", icon: "sagent", Comp: IngestionAgent },
+  { key: "presentation", label: "Presentation Agent", icon: "spres", Comp: Presentation },
+  { key: "connections", label: "Data Connections", icon: "sconn", Comp: DataConnections },
+  { key: "settings", label: "Settings", icon: "cog", Comp: Settings },
 ];
 
 export default function App() {
   const [active, setActive] = useState("dashboard");
-  const [collapsed, setCollapsed] = useState(false);
   const [status, setStatus] = useState(null);
   const [connErr, setConnErr] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [profiles, setProfiles] = useState({});
+  const [theme, setTheme] = useState(() => {
+    try { return localStorage.getItem("fps_theme") || "dark"; } catch { return "dark"; }
+  });
+
+  const toggleTheme = () => setTheme((prev) => {
+    const next = prev === "dark" ? "light" : "dark";
+    try { localStorage.setItem("fps_theme", next); } catch { /* storage unavailable */ }
+    return next;
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
 
   const goTo = (key, opts = {}) => {
     setActive(key);
@@ -77,16 +90,14 @@ export default function App() {
 
   return (
     <ToastProvider>
-      <div className={`shell ${collapsed ? "shell-collapsed" : ""}`}>
+      <div className="shell">
         <aside className="sidebar">
           <div className="brand">
-            <div className="brand-mark">FS</div>
-            {!collapsed && (
-              <div>
-                <div className="brand-title">File Pickup</div>
-                <div className="brand-sub">Scheduler Console</div>
-              </div>
-            )}
+            <div className="brand-mark"><Ic n="logo" size={20} /></div>
+            <div>
+              <div className="brand-title">File Pickup</div>
+              <div className="brand-sub">Scheduler Console</div>
+            </div>
           </div>
 
           <nav className="nav">
@@ -97,39 +108,32 @@ export default function App() {
                 onClick={() => goTo(n.key)}
                 title={n.label}
               >
-                <span className="nav-icon">{n.icon}</span>
-                {!collapsed && <span>{n.label}</span>}
+                <span className="nav-icon"><Ic n={n.icon} size={17} /></span>
+                <span>{n.label}</span>
               </button>
             ))}
           </nav>
 
-          {!collapsed && (
-            <div className="sidebar-stat">
-              <div className="sidebar-stat-item">
-                <div className="sidebar-stat-num">{totalCount}</div>
-                <div className="sidebar-stat-lbl">Total</div>
-              </div>
-              <div className="sidebar-stat-item">
-                <div className="sidebar-stat-num" style={{ color: "var(--good, #10b981)" }}>{activeCount}</div>
-                <div className="sidebar-stat-lbl">Active</div>
-              </div>
-              <div className="sidebar-stat-item">
-                <div className="sidebar-stat-num" style={{ color: "var(--warn, #f59e0b)" }}>{pausedCount}</div>
-                <div className="sidebar-stat-lbl">Paused</div>
-              </div>
+          <div className="sidebar-stat">
+            <div className="sidebar-stat-item">
+              <div className="sidebar-stat-num">{totalCount}</div>
+              <div className="sidebar-stat-lbl">Total</div>
             </div>
-          )}
+            <div className="sidebar-stat-item">
+              <div className="sidebar-stat-num" style={{ color: "var(--good, #10b981)" }}>{activeCount}</div>
+              <div className="sidebar-stat-lbl">Active</div>
+            </div>
+            <div className="sidebar-stat-item">
+              <div className="sidebar-stat-num" style={{ color: "var(--warn, #f59e0b)" }}>{pausedCount}</div>
+              <div className="sidebar-stat-lbl">Paused</div>
+            </div>
+          </div>
 
           <div className="sidebar-foot">
-            <div className={`engine-pill engine-${engineStatus}`}>
+            <div className="engine-pill engine-default">
               <span className={`dot ${connErr ? "dot-bad" : "dot-good"}`} />
-              {!collapsed && (
-                <span>{connErr ? "API unreachable" : `Engine: ${engineStatus}`}</span>
-              )}
+              <span className="engine-label">{connErr ? "API unreachable" : `Engine: ${engineStatus}`}</span>
             </div>
-            <button className="collapse-btn" onClick={() => setCollapsed((c) => !c)}>
-              {collapsed ? "»" : "« Collapse"}
-            </button>
           </div>
         </aside>
 
@@ -160,6 +164,16 @@ export default function App() {
               ) : (
                 <span className="conn-badge conn-good">● Connected</span>
               )}
+              <button
+                className="icon-btn"
+                onClick={toggleTheme}
+                aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+                title={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+              >
+                {theme === "dark"
+                  ? <Ic n="sun" size={15} style={{ color: "var(--warn)" }} />
+                  : <Ic n="moon" size={15} />}
+              </button>
             </div>
           </header>
 

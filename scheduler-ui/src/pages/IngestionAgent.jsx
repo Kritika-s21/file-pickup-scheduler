@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Panel, Card, Stat, Tabs, Badge, Button, Input, Field, Empty, LogConsole, useToast } from "../components/ui.jsx";
 import { AgentAPI, ConnectionsAPI } from "../api.js";
+import Ic from "../components/icons.jsx";
 
 const DEFAULT_SQL_LABEL = "(default — SQL_CONNECTION_STRING env var)";
 const DEFAULT_VEC_LABEL = "(default — VECTOR_DB_PATH env var)";
@@ -18,8 +19,8 @@ export default function IngestionAgent() {
 
   if (err) {
     return (
-      <Panel title="Data Classification & Ingestion Agent" icon="🧠">
-        <div className="err-banner">⚠️ {err}</div>
+      <Panel title="Data Classification & Ingestion Agent" icon="sagent">
+        <div className="err-banner"><Ic n="warn" size={13} /> {err}</div>
         <p className="text-mid">Start the API server with:</p>
         <pre className="mono code-box">python api_server.py</pre>
       </Panel>
@@ -31,20 +32,20 @@ export default function IngestionAgent() {
   return (
     <>
       <div className="grid grid-3 mb-md">
-        <Card><Stat icon="🟢" tone="good" label="Agent status" value={agentStatus ? "Online" : "…"} /></Card>
-        <Card><Stat icon="🧩" tone="violet" label="Vector chunks" value={vs.total_chunks ?? 0} /></Card>
-        <Card><Stat icon="📈" tone="accent" label="Recent pipelines" value={agentStatus?.recent_pipelines ?? 0} /></Card>
+        <Card><Stat icon="live" tone="good" label="Agent status" value={agentStatus ? "Online" : "…"} /></Card>
+        <Card><Stat icon="puzzle" tone="violet" label="Vector chunks" value={vs.total_chunks ?? 0} /></Card>
+        <Card><Stat icon="trend" tone="accent" label="Recent pipelines" value={agentStatus?.recent_pipelines ?? 0} /></Card>
       </div>
 
       <Tabs
         active={tab}
         onChange={setTab}
         tabs={[
-          { key: "status", label: "Scan Ingestion Status", icon: "📂" },
-          { key: "sql", label: "SQL Records", icon: "🗄" },
-          { key: "vector", label: "Vector Store", icon: "🔍" },
-          { key: "results", label: "Results", icon: "📊" },
-          { key: "logs", label: "Logs", icon: "📋" },
+          { key: "status", label: "Scan Ingestion Status", icon: "folder" },
+          { key: "sql", label: "SQL Records", icon: "archive" },
+          { key: "vector", label: "Vector Store", icon: "search" },
+          { key: "results", label: "Results", icon: "bars" },
+          { key: "logs", label: "Logs", icon: "clip" },
         ]}
       />
 
@@ -58,7 +59,7 @@ export default function IngestionAgent() {
 
       <style>{`
         .err-banner { background: var(--bad-dim); color: var(--bad); padding: 12px 16px; border-radius: 8px; margin-bottom: 14px; }
-        .code-box { background: #0c1119; border: 1px solid var(--border-soft); border-radius: 8px; padding: 12px 16px; }
+        .code-box { background: var(--code-bg, #0c1119); border: 1px solid var(--border-soft); border-radius: 8px; padding: 12px 16px; }
       `}</style>
     </>
   );
@@ -71,18 +72,18 @@ function ScanStatusTab() {
   useEffect(() => { load(); }, []);
 
   return (
-    <Panel title="Scan-driven ingestion status" icon="📂"
+    <Panel title="Scan-driven ingestion status" icon="folder"
       subtitle="Ingestion runs automatically — every scan that finds new/modified files extracts and ingests them in the background"
-      actions={<Button size="sm" onClick={load}>🔄 Refresh</Button>}>
+      actions={<Button size="sm" onClick={load}><Ic n="refresh" size={13} /> Refresh</Button>}>
       {err && <div className="err-banner">{err}</div>}
-      {!results ? <Empty icon="⏳" title="Loading…" /> :
+      {!results ? <Empty icon="hourglass" title="Loading…" /> :
         results.length === 0 ? (
-          <Empty icon="📭" title="No pipeline activity yet" hint="Trigger a scan from Dashboard or My Schedulers." />
+          <Empty icon="inbox" title="No pipeline activity yet" hint="Trigger a scan from Dashboard or My Schedulers." />
         ) : (
           <div className="flex-col gap-sm">
             {results.slice(0, 20).map((r) => (
               <div key={r.pipeline_id} className="file-row">
-                <span>{r.error ? "❌" : "✅"}</span>
+                <Ic n={r.error ? "errCircle" : "checkCircle"} size={15} />
                 <b>{r.file_name || "?"}</b>
                 <span className="text-mid">{r.stages?.classification?.classification || "?"}</span>
                 <span className="text-mid mono" style={{ fontSize: 11 }}>{r.pipeline_id}</span>
@@ -114,15 +115,15 @@ function SqlRecordsTab() {
   useEffect(() => { load(); }, [load]);
 
   return (
-    <Panel title="SQL ingested records" icon="🗄" subtitle="dbo.FileIngestion"
-      actions={<Button size="sm" onClick={load}>🔄 Refresh</Button>}>
+    <Panel title="SQL ingested records" icon="archive" subtitle="dbo.FileIngestion"
+      actions={<Button size="sm" onClick={load}><Ic n="refresh" size={13} /> Refresh</Button>}>
       <Field label="Database">
         <select className="select" value={sqlChoice} onChange={(e) => setSqlChoice(e.target.value)}>
           {[DEFAULT_SQL_LABEL, ...sqlProfiles.map((p) => p.name)].map((o) => <option key={o} value={o}>{o}</option>)}
         </select>
       </Field>
       {err && <div className="err-banner">{err}</div>}
-      {!data ? <Empty icon="⏳" title="Loading…" /> : data.records?.length ? (
+      {!data ? <Empty icon="hourglass" title="Loading…" /> : data.records?.length ? (
         <>
           <div className="text-mid mb-sm" style={{ fontSize: 12.5 }}>{data.count} record(s) found</div>
           <table className="data-table">
@@ -143,7 +144,7 @@ function SqlRecordsTab() {
           </table>
         </>
       ) : (
-        <Empty icon="📭" title="No structured records ingested yet" />
+        <Empty icon="inbox" title="No structured records ingested yet" />
       )}
       <style>{`.err-banner{background:var(--bad-dim);color:var(--bad);padding:10px 14px;border-radius:8px;margin-bottom:12px}
         .select{background:var(--bg-3);border:1px solid var(--border-soft);border-radius:8px;padding:8px 12px;font-size:13px;margin-bottom:12px}`}</style>
@@ -186,28 +187,28 @@ function VectorTab({ vs, agentStatus }) {
   const s = stats || vs || {};
   return (
     <>
-      <Panel title="Vector store" icon="🔍" subtitle="LanceDB collection stats">
+      <Panel title="Vector store" icon="search" subtitle="LanceDB collection stats">
         <Field label="Vector store">
           <select className="select" value={vecChoice} onChange={(e) => setVecChoice(e.target.value)}>
             {[DEFAULT_VEC_LABEL, ...vecProfiles.map((p) => p.name)].map((o) => <option key={o} value={o}>{o}</option>)}
           </select>
         </Field>
         <div className="grid grid-4">
-          <Card><Stat icon="🧩" tone="violet" label="Total chunks" value={s.total_chunks ?? 0} /></Card>
-          <Card><Stat icon="🗂️" tone="accent" label="Collection" value={s.collection ?? "—"} /></Card>
-          <Card><Stat icon="🗄" tone="good" label="SQL table" value={s.sql_table ?? "dbo.FileVectors"} /></Card>
-          <Card><Stat icon="⚙️" tone="warn" label="Status" value={s.status ?? agentStatus?.status ?? "unknown"} /></Card>
+          <Card><Stat icon="puzzle" tone="violet" label="Total chunks" value={s.total_chunks ?? 0} /></Card>
+          <Card><Stat icon="archive" tone="accent" label="Collection" value={s.collection ?? "—"} /></Card>
+          <Card><Stat icon="box" tone="good" label="SQL table" value={s.sql_table ?? "dbo.FileVectors"} /></Card>
+          <Card><Stat icon="cog" tone="warn" label="Status" value={s.status ?? agentStatus?.status ?? "unknown"} /></Card>
         </div>
       </Panel>
 
-      <Panel title="Semantic search" icon="🔎" subtitle="Query the vector store directly">
+      <Panel title="Semantic search" icon="search" subtitle="Query the vector store directly">
         <div className="row gap-sm mb-md">
           <Input placeholder="Search ingested content…" value={query} onChange={(e) => setQuery(e.target.value)} className="w-full" />
           <Input type="number" value={topK} min={1} max={30} style={{ width: 80 }} onChange={(e) => setTopK(Number(e.target.value))} />
           <Button variant="primary" loading={searching} onClick={search}>Search</Button>
         </div>
         {results && (
-          results.length === 0 ? <Empty icon="🔍" title="No matches" /> : (
+          results.length === 0 ? <Empty icon="search" title="No matches" /> : (
             <div className="flex-col gap-sm">
               {results.map((r, i) => (
                 <div key={i} className="card" style={{ padding: 12 }}>
@@ -235,10 +236,10 @@ function ResultsTab() {
   useEffect(() => { load(); }, []);
 
   return (
-    <Panel title="Recent pipeline results" icon="📊"
-      actions={<Button size="sm" onClick={load}>🔄 Refresh</Button>}>
+    <Panel title="Recent pipeline results" icon="bars"
+      actions={<Button size="sm" onClick={load}><Ic n="refresh" size={13} /> Refresh</Button>}>
       {err && <div className="err-banner">{err}</div>}
-      {!data ? <Empty icon="⏳" title="Loading…" /> : data.results?.length ? (
+      {!data ? <Empty icon="hourglass" title="Loading…" /> : data.results?.length ? (
         <div className="flex-col gap-sm">
           {data.results.map((res) => {
             const stages = res.stages || {};
@@ -247,7 +248,7 @@ function ResultsTab() {
             return (
               <details key={res.pipeline_id} className="result-item">
                 <summary>
-                  {res.error ? "❌" : "✅"} [{res.pipeline_id}] {res.file_name || "?"} → {cls.classification || "?"} → {ing.target || "?"}
+                  <Ic n={res.error ? "errCircle" : "checkCircle"} size={13} /> [{res.pipeline_id}] {res.file_name || "?"} → {cls.classification || "?"} → {ing.target || "?"}
                 </summary>
                 <div className="grid grid-3 mt-sm mb-sm">
                   <Badge status={stages.extraction?.status}>Extract: {stages.extraction?.status || "?"}</Badge>
@@ -263,12 +264,12 @@ function ResultsTab() {
             );
           })}
         </div>
-      ) : <Empty icon="📭" title="No pipeline runs yet" />}
+      ) : <Empty icon="inbox" title="No pipeline runs yet" />}
       <style>{`
         .err-banner{background:var(--bad-dim);color:var(--bad);padding:10px 14px;border-radius:8px;margin-bottom:12px}
         .result-item{background:var(--bg-3);border-radius:10px;padding:12px 16px}
         .result-item summary{cursor:pointer;font-size:13px;font-weight:500}
-        .json-block{background:#0c1119;border:1px solid var(--border-soft);border-radius:8px;padding:12px;font-size:12px;max-height:280px;overflow:auto}
+        .json-block{background:var(--code-bg, #0c1119);border:1px solid var(--border-soft);border-radius:8px;padding:12px;font-size:12px;max-height:280px;overflow:auto}
       `}</style>
     </Panel>
   );
@@ -282,8 +283,8 @@ function LogsTab() {
   useEffect(() => { load(); }, [lines]);
 
   return (
-    <Panel title="Agent logs" icon="📋"
-      actions={<Button size="sm" onClick={load}>🔄 Refresh</Button>}>
+    <Panel title="Agent logs" icon="clip"
+      actions={<Button size="sm" onClick={load}><Ic n="refresh" size={13} /> Refresh</Button>}>
       <div className="row gap-sm mb-md">
         <Field label={`Lines: ${lines}`}>
           <input type="range" min={50} max={500} step={10} value={lines} onChange={(e) => setLines(Number(e.target.value))} />

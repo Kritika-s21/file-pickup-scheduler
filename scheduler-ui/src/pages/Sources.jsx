@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Panel, Card, Field, Input, Select, Toggle, Button, Badge, Empty, useToast, useConfirm } from "../components/ui.jsx";
 import { SchedulerAPI, ProfileStore } from "../api.js";
 import { uid } from "../lib/format.js";
+import Ic from "../components/icons.jsx";
 
 const SOURCE_TYPES = ["local", "gdrive", "azure", "s3"];
-const SOURCE_ICONS = { local: "💻", gdrive: "🗄️", azure: "🔷", s3: "🪣" };
+const SOURCE_ICON_KEYS = { local: "folder", gdrive: "archive", azure: "cloud", s3: "box" };
 const SOURCE_COLORS = { local: "#48c9d8", gdrive: "#34a853", azure: "#0078d4", s3: "#ff9900" };
 
 function emptySource(type = "local") {
@@ -20,7 +21,7 @@ function SourceForm({ value, onChange }) {
       <div className="grid grid-3 mb-sm">
         <Field label="Source type">
           <Select value={v.source_type} onChange={(e) => set({ source_type: e.target.value })}>
-            {SOURCE_TYPES.map((t) => <option key={t} value={t}>{SOURCE_ICONS[t]} {t.toUpperCase()}</option>)}
+            {SOURCE_TYPES.map((t) => <option key={t} value={t}>{t.toUpperCase()}</option>)}
           </Select>
         </Field>
         <Field label="Source ID" required>
@@ -33,7 +34,7 @@ function SourceForm({ value, onChange }) {
 
       {v.source_type === "local" && (
         <>
-          <div className="hint-box">📁 Scans a folder on the server running the app — not your local machine.</div>
+          <div className="hint-box"><Ic n="folder" size={13} /> Scans a folder on the server running the app — not your local machine.</div>
           <div className="grid grid-2">
             <Field label="Folder path (on server)">
               <Input value={v.path || ""} onChange={(e) => set({ path: e.target.value })} placeholder="/data/incoming" />
@@ -48,7 +49,7 @@ function SourceForm({ value, onChange }) {
       {v.source_type === "gdrive" && (
         <>
           <div className="hint-box">
-            ℹ️ Paste the folder ID from drive.google.com/drive/folders/&lt;folder_id&gt;. Share the folder with the service account email as Viewer.
+            <Ic n="info" size={13} /> Paste the folder ID from drive.google.com/drive/folders/&lt;folder_id&gt;. Share the folder with the service account email as Viewer.
           </div>
           <div className="grid grid-3">
             <Field label="Folder ID"><Input value={v.folder_id || ""} onChange={(e) => set({ folder_id: e.target.value })} /></Field>
@@ -146,7 +147,7 @@ function SecretInputWithUpload({ label, value, onChange, placeholder, fileTypes 
           <input id={inputId} type="file" accept={fileTypes} onChange={handleFile} />
           {value ? (
             <div className="text-mid" style={{ fontSize: 11.5, marginTop: 4 }}>
-              ✅ File loaded ({value.length.toLocaleString()} chars) — replaces the credential saved for this source only.
+              <Ic n="checkCircle" size={12} /> File loaded ({value.length.toLocaleString()} chars) — replaces the credential saved for this source only.
             </div>
           ) : (
             <div className="text-mid" style={{ fontSize: 11.5, marginTop: 4 }}>
@@ -175,7 +176,7 @@ function GdriveCredsForm({ creds, onChange, label }) {
       {method === "service_account" ? (
         <>
           <div className="hint-box mb-sm">
-            🔒 Paste or upload the service account JSON key — encrypted and stored with this source only.
+            <Ic n="lock" size={13} /> Paste or upload the service account JSON key — encrypted and stored with this source only.
             The folder (or its Shared Drive) must be shared with the service account's client_email as at
             least Viewer, or nothing will be found.
           </div>
@@ -189,7 +190,7 @@ function GdriveCredsForm({ creds, onChange, label }) {
         </>
       ) : (
         <div className="hint-box">
-          ℹ️ Application Default Credentials — the server's own identity is used; no secret stored here.
+          <Ic n="info" size={13} /> Application Default Credentials — the server's own identity is used; no secret stored here.
         </div>
       )}
     </AuthPanel>
@@ -211,7 +212,7 @@ function AzureCredsForm({ creds, onChange }) {
       </Field>
       {method === "service_account" ? (
         <>
-          <div className="hint-box mb-sm">🔒 Paste the connection string — encrypted and stored with this source only.</div>
+          <div className="hint-box mb-sm"><Ic n="lock" size={13} /> Paste the connection string — encrypted and stored with this source only.</div>
           <Field label="Connection string">
             <Input type="password" value={c.connection_string_ref || ""}
               onChange={(e) => set({ connection_string_ref: e.target.value })}
@@ -220,7 +221,7 @@ function AzureCredsForm({ creds, onChange }) {
         </>
       ) : (
         <>
-          <div className="hint-box mb-sm">ℹ️ DefaultAzureCredential — the server's own managed identity is used; no secret stored here.</div>
+          <div className="hint-box mb-sm"><Ic n="info" size={13} /> DefaultAzureCredential — the server's own managed identity is used; no secret stored here.</div>
           <Field label="Storage account name">
             <Input value={c.account_name || ""} onChange={(e) => set({ account_name: e.target.value })} />
           </Field>
@@ -250,7 +251,7 @@ function S3CredsForm({ creds, onChange }) {
       </div>
       {method === "service_account" ? (
         <>
-          <div className="hint-box mb-sm">🔒 Paste the Access Key ID and Secret — encrypted and stored with this source only.</div>
+          <div className="hint-box mb-sm"><Ic n="lock" size={13} /> Paste the Access Key ID and Secret — encrypted and stored with this source only.</div>
           <div className="grid grid-2">
             <Field label="Access Key ID">
               <Input type="password" value={c.aws_access_key_id_ref || ""}
@@ -268,7 +269,7 @@ function S3CredsForm({ creds, onChange }) {
         </>
       ) : (
         <>
-          <div className="hint-box mb-sm">ℹ️ STS AssumeRole — no long-lived keys stored; the server assumes this role at scan time.</div>
+          <div className="hint-box mb-sm"><Ic n="info" size={13} /> STS AssumeRole — no long-lived keys stored; the server assumes this role at scan time.</div>
           <Field label="IAM Role ARN">
             <Input value={c.role_arn || ""} onChange={(e) => set({ role_arn: e.target.value })}
               placeholder="arn:aws:iam::123456789012:role/MyRole" />
@@ -331,23 +332,23 @@ export default function Sources() {
   return (
     <>
       {confirmNode}
-      <Panel title="Add sources" icon="🔌" subtitle="Configure a source, then attach it to a scheduler">
+      <Panel title="Add sources" icon="ssrc" subtitle="Configure a source, then attach it to a scheduler">
         <div className="hint-box mb-md">
-          🔒 Credentials are sent to <code className="mono">/api/sources</code> and encrypted individually per source by the
+          <Ic n="lock" size={13} /> Credentials are sent to <code className="mono">/api/sources</code> and encrypted individually per source by the
           scheduler engine — never shared between sources.
         </div>
         {forms.map((f, i) => (
           <SourceForm key={i} value={f} onChange={(val) => updateForm(i, val)} />
         ))}
         <div className="row gap-sm">
-          <Button variant="default" onClick={addFormRow}>+ Add another source</Button>
-          <Button variant="primary" onClick={commitDrafts}>✅ Add source(s) to draft</Button>
+          <Button variant="default" onClick={addFormRow}><Ic n="plus" size={13} /> Add another source</Button>
+          <Button variant="primary" onClick={commitDrafts}><Ic n="check" size={13} /> Add source(s) to draft</Button>
         </div>
       </Panel>
 
-      <Panel title="Connected sources (draft)" icon="📦" subtitle="Sources ready to attach to a scheduler">
+      <Panel title="Connected sources (draft)" icon="box" subtitle="Sources ready to attach to a scheduler">
         {drafts.length === 0 ? (
-          <Empty icon="📭" title="No sources in draft yet" />
+          <Empty icon="inbox" title="No sources in draft yet" />
         ) : (
           <>
             <div className="flex-col gap-sm">
@@ -359,23 +360,23 @@ export default function Sources() {
                 return (
                   <div key={src._uid || i} className="source-chip" style={{ borderLeftColor: color }}>
                     <div className="row gap-sm">
-                      <span>{SOURCE_ICONS[src.source_type]}</span>
+                      <Ic n={SOURCE_ICON_KEYS[src.source_type] || "box"} size={15} />
                       <b>{src.source_id}</b>
                       <Badge status="neutral">{src.source_type.toUpperCase()}</Badge>
                     </div>
-                    <div className="mono text-mid" style={{ fontSize: 12 }}>📂 {location} · 🔍 {src.pattern || "*"}</div>
-                    <Button size="sm" variant="danger" onClick={() => removeDraft(i, src)}>🗑</Button>
+                    <div className="mono text-mid" style={{ fontSize: 12 }}><Ic n="folder" size={12} /> {location} · <Ic n="search" size={12} /> {src.pattern || "*"}</div>
+                    <Button size="sm" variant="danger" onClick={() => removeDraft(i, src)}><Ic n="trash" size={13} /></Button>
                   </div>
                 );
               })}
             </div>
-            <Button variant="ghost" className="mt-md" onClick={clearAll}>🗑 Clear all draft sources</Button>
+            <Button variant="ghost" className="mt-md" onClick={clearAll}><Ic n="trash" size={13} /> Clear all draft sources</Button>
           </>
         )}
       </Panel>
 
       {attachedProfiles.length > 0 && (
-        <Panel title="Sources attached to saved schedulers" icon="🗂️" defaultOpen={false}>
+        <Panel title="Sources attached to saved schedulers" icon="archive" defaultOpen={false}>
           {attachedProfiles.map((p) => (
             <div key={p.id} className="mb-md">
               <div className="row-between mb-sm">
@@ -384,7 +385,7 @@ export default function Sources() {
               </div>
               {(p.sources || []).map((src, i) => (
                 <div key={i} className="text-mid" style={{ fontSize: 12.5, padding: "4px 0" }}>
-                  {SOURCE_ICONS[src.source_type] || "📦"} <b>{src.source_id}</b> · {src.source_type?.toUpperCase()}
+                  <Ic n={SOURCE_ICON_KEYS[src.source_type] || "box"} size={13} /> <b>{src.source_id}</b> · {src.source_type?.toUpperCase()}
                 </div>
               ))}
             </div>

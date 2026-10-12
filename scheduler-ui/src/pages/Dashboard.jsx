@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Panel, Card, Stat, Badge, Button, Empty, useToast, useConfirm } from "../components/ui.jsx";
 import { SchedulerAPI, ProfileStore } from "../api.js";
 import { freqLabel, fmtDateTime } from "../lib/format.js";
+import Ic from "../components/icons.jsx";
 
 // Groups the flat /api/history list by scheduler_id and returns, per scheduler,
 // its most recent scan record — mirrors scheduler_app_1.py's page_dashboard()
@@ -179,17 +180,17 @@ export default function Dashboard({ goTo, status }) {
     <>
       {confirmNode}
       <div className="grid grid-4 mb-md" style={{ gridTemplateColumns: "repeat(5, 1fr)" }}>
-        <Card><Stat icon="🗂️" tone="accent" label="Schedulers" value={list.length} /></Card>
-        <Card><Stat icon="📈" tone="good" label="Total scans" value={history.length} /></Card>
-        <Card><Stat icon="📄" tone="violet" label="Total files" value={totalUniqueFiles} /></Card>
-        <Card><Stat icon="🆕" tone="accent" label="New (latest scan)" value={totalNewAll} /></Card>
-        <Card><Stat icon="🟢" tone="warn" label="Active" value={activeCount} /></Card>
+        <Card><Stat icon="archive" tone="accent" label="Schedulers" value={list.length} /></Card>
+        <Card><Stat icon="trend" tone="good" label="Total scans" value={history.length} /></Card>
+        <Card><Stat icon="file" tone="violet" label="Total files" value={totalUniqueFiles} /></Card>
+        <Card><Stat icon="plus" tone="accent" label="New (latest scan)" value={totalNewAll} /></Card>
+        <Card><Stat icon="live" tone="warn" label="Active" value={activeCount} /></Card>
       </div>
 
-      <Panel title="Schedulers" icon="🗂️" subtitle="All configured pickup schedulers">
+      <Panel title="Schedulers" icon="archive" subtitle="All configured pickup schedulers">
         {list.length === 0 ? (
           <Empty
-            icon="📭"
+            icon="inbox"
             title="No schedulers yet"
             hint='Go to "New Scheduler" in the sidebar to create your first one.'
           />
@@ -213,10 +214,10 @@ export default function Dashboard({ goTo, status }) {
                   </div>
                   <Badge status={s.status || "idle"} />
                   <div className="sched-freq text-mid">
-                    📆 {freqLabel(s)}
+                    <Ic n="cal" size={13} /> {freqLabel(s)}
                     {s.status === "running" && (
                       <div style={{ marginTop: 2, fontSize: 11.5 }}>
-                        ⏰ next: <b>{authoritativeNextRun ? fmtDateTime(authoritativeNextRun) : "—"}</b>
+                        <Ic n="clock" size={12} /> next: <b>{authoritativeNextRun ? fmtDateTime(authoritativeNextRun) : "—"}</b>
                       </div>
                     )}
                   </div>
@@ -224,10 +225,10 @@ export default function Dashboard({ goTo, status }) {
                   <div className="sched-scan text-mid" style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
                     {last ? (
                       <>
-                        <Badge status="neutral">⬛ {nTotal} files</Badge>
+                        <Badge status="neutral">{nTotal} files</Badge>
                         <Badge status={nNew ? "success" : "neutral"}>+{nNew} new</Badge>
                         {nMod > 0 && <Badge status="warn">~{nMod} mod</Badge>}
-                        {errCount > 0 && <Badge status="error">⚠ {errCount}</Badge>}
+                        {errCount > 0 && <Badge status="error"><Ic n="warn" size={12} /> {errCount}</Badge>}
                         <span style={{ fontSize: 11 }}>
                           · {runs} run{runs === 1 ? "" : "s"} · last {fmtDateTime(last.finished_at || last.started_at)}
                         </span>
@@ -242,9 +243,9 @@ export default function Dashboard({ goTo, status }) {
                       loading={busyId === s.id} onClick={() => toggle(s.id, s)}>
                       {s.status === "running" ? "Pause" : "Start"}
                     </Button>
-                    <Button size="sm" variant="default" loading={busyId === s.id} onClick={() => runNow(s.id, s)}>⚡ Run</Button>
-                    <Button size="sm" variant="ghost" onClick={() => goTo && goTo("new", { editingId: s.id })}>✏️</Button>
-                    <Button size="sm" variant="danger" onClick={() => remove(s.id, s)}>🗑</Button>
+                    <Button size="sm" variant="default" loading={busyId === s.id} onClick={() => runNow(s.id, s)}><Ic n="run" size={13} /> Run</Button>
+                    <Button size="sm" variant="ghost" onClick={() => goTo && goTo("new", { editingId: s.id })}><Ic n="edit" size={13} /></Button>
+                    <Button size="sm" variant="danger" onClick={() => remove(s.id, s)}><Ic n="trash" size={13} /></Button>
                   </div>
                 </div>
               );
@@ -253,9 +254,9 @@ export default function Dashboard({ goTo, status }) {
         )}
       </Panel>
 
-      <Panel title="Recent scan activity" icon="📈" subtitle="From /api/history" defaultOpen={list.length > 0}>
+      <Panel title="Recent scan activity" icon="trend" subtitle="From /api/history" defaultOpen={list.length > 0}>
         {history.length === 0 ? (
-          <Empty icon="📉" title="No scan history yet" />
+          <Empty icon="trendDown" title="No scan history yet" />
         ) : (
           <table className="data-table">
             <thead>
