@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Panel, Card, Stat, Tabs, Input, Field, Button, Badge, Toggle, Empty, useToast } from "../components/ui.jsx";
+import { Panel, Card, Stat, Tabs, Input, Select, Field, Button, Badge, Toggle, Empty, useToast } from "../components/ui.jsx";
 import { PresentationAPI, ConnectionsAPI } from "../api.js";
 import Ic from "../components/icons.jsx";
 
@@ -98,14 +98,14 @@ export default function Presentation() {
         actions={<Button size="sm" onClick={loadSchema}><Ic n="refresh" size={13} /> Refresh</Button>}>
         <div className="grid grid-2 mb-md">
           <Field label="SQL database">
-            <select className="select w-full" value={snapSqlChoice} onChange={(e) => setSnapSqlChoice(e.target.value)}>
+            <Select className="w-full" value={snapSqlChoice} onChange={(e) => setSnapSqlChoice(e.target.value)}>
               {sqlOptions.map((o) => <option key={o} value={o}>{o}</option>)}
-            </select>
+            </Select>
           </Field>
           <Field label="Vector store">
-            <select className="select w-full" value={snapVecChoice} onChange={(e) => setSnapVecChoice(e.target.value)}>
+            <Select className="w-full" value={snapVecChoice} onChange={(e) => setSnapVecChoice(e.target.value)}>
               {vecOptions.map((o) => <option key={o} value={o}>{o}</option>)}
-            </select>
+            </Select>
           </Field>
         </div>
         <div className="grid grid-2">
@@ -256,9 +256,11 @@ function StatusTab({ jobId, setJobId }) {
 
   return (
     <Panel title="Job status & download" icon="folder">
-      <div className="row gap-sm mb-md">
-        <Input className="w-full" value={input} onChange={(e) => setInput(e.target.value)}
-          placeholder="paste a job_id or generate one in the Generate tab" />
+      <div className="job-status-controls mb-md">
+        <Field label="Job ID">
+          <Input className="w-full" value={input} onChange={(e) => setInput(e.target.value)}
+            placeholder="Paste a job_id or generate one in the Generate tab" />
+        </Field>
         <Button onClick={() => fetchStatus(input)}><Ic n="refresh" size={13} /> Refresh status</Button>
         <Toggle checked={autoPoll} onChange={setAutoPoll} label="Auto-poll" />
       </div>
@@ -348,6 +350,9 @@ function StatusTab({ jobId, setJobId }) {
         .info-inline{background:var(--accent-dim);color:var(--accent-hi);padding:10px 14px;border-radius:8px;font-size:13px}
         .issue-row{background:var(--warn-dim);color:var(--warn);padding:8px 12px;border-radius:6px;margin-bottom:6px;font-size:12.5px}
         .code-box{background:var(--code-bg, #0c1119);border:1px solid var(--border-soft);border-radius:8px;padding:12px 16px;font-size:12px;max-height:320px;overflow:auto}
+        .job-status-controls{display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap}
+        .job-status-controls .field{flex:1 1 280px;min-width:0;margin-bottom:0}
+        .job-status-controls>.toggle-row{min-height:40px}
       `}</style>
     </Panel>
   );
