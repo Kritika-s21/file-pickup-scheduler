@@ -214,12 +214,12 @@ function SqlProfiles() {
         <div className="flex-col gap-sm">
           {profiles.map((p) => (
             <Card key={p.id}>
-              <div className="row-between">
-                <div>
+              <div className="sql-profile-row">
+                <div className="sql-profile-info">
                   <b>{p.name}</b> <Badge status="accent">{p.db_type}</Badge>
-                  <div className="mono text-mid mt-sm" style={{ fontSize: 12 }}>{p.masked || "(unreadable — check SCHED_MASTER_KEY)"}</div>
+                  <div className="sql-profile-connection mono text-mid mt-sm" style={{ fontSize: 12 }}>{p.masked || "(unreadable — check SCHED_MASTER_KEY)"}</div>
                 </div>
-                <div className="row gap-sm">
+                <div className="sql-profile-actions row gap-sm">
                   <Button size="sm" loading={testingId === p.id} onClick={() => test(p.id)}><Ic n="flask" size={13} /> Test</Button>
                   <Button size="sm" variant="danger" loading={deletingId === p.id} onClick={() => del(p.id)}><Ic n="trash" size={13} /> Delete</Button>
                 </div>
@@ -230,6 +230,11 @@ function SqlProfiles() {
       )}
       <style>{`.section-label{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-mid)}
         .flex-col{display:flex;flex-direction:column}
+        .sql-profile-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+        .sql-profile-info{flex:1 1 220px;min-width:0}
+        .sql-profile-info b{overflow-wrap:anywhere}
+        .sql-profile-connection{overflow-wrap:anywhere}
+        .sql-profile-actions{flex-wrap:wrap}
         .link-btn{background:none;border:none;color:var(--accent-hi);font-size:12.5px;cursor:pointer;padding:2px 0;text-align:left;text-decoration:underline;width:fit-content}`}</style>
     </>
   );
@@ -321,12 +326,12 @@ function VectorProfiles() {
         <div className="flex-col gap-sm">
           {profiles.map((p) => (
             <Card key={p.id}>
-              <div className="row-between">
-                <div>
-                  <b>{p.name}</b> <span className="text-mid" style={{ fontSize: 12 }}>collection: <span className="mono">{p.collection_name}</span></span>
-                  <div className="mono text-mid mt-sm" style={{ fontSize: 12 }}>{p.db_path}</div>
+              <div className="vector-profile-row">
+                <div className="vector-profile-info">
+                  <b>{p.name}</b> <span className="text-mid vector-profile-collection">collection: <span className="mono">{p.collection_name}</span></span>
+                  <div className="vector-profile-path mono text-mid mt-sm" style={{ fontSize: 12 }}>{p.db_path}</div>
                 </div>
-                <div className="row gap-sm">
+                <div className="vector-profile-actions row gap-sm">
                   <Button size="sm" loading={testingId === p.id} onClick={() => test(p.id)}><Ic n="flask" size={13} /> Test</Button>
                   <Button size="sm" variant="danger" loading={deletingId === p.id} onClick={() => del(p.id)}><Ic n="trash" size={13} /> Delete</Button>
                 </div>
@@ -336,7 +341,11 @@ function VectorProfiles() {
         </div>
       )}
       <style>{`.section-label{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-mid)}
-        .flex-col{display:flex;flex-direction:column}`}</style>
+        .flex-col{display:flex;flex-direction:column}
+        .vector-profile-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+        .vector-profile-info{flex:1 1 220px;min-width:0;overflow-wrap:anywhere}
+        .vector-profile-collection,.vector-profile-path{overflow-wrap:anywhere}
+        .vector-profile-actions{flex-wrap:wrap}`}</style>
     </>
   );
 }
