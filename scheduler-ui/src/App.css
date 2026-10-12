@@ -80,9 +80,10 @@
 .topbar {
   position: sticky; top: 0; z-index: 20;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 20px 32px; background: rgba(16, 22, 31, 0.85); backdrop-filter: blur(8px);
+  padding: 20px 32px; background: var(--topbar-bg); backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border-soft);
 }
+.topbar-right { display: flex; align-items: center; gap: 10px; }
 .page-title { font-size: 21px; }
 .page-crumb { font-size: 12px; color: var(--text-low); margin-top: 3px; text-transform: capitalize; }
 .conn-badge { font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 20px; }
